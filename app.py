@@ -12,22 +12,22 @@ app = Flask(__name__, static_url_path='', static_folder='./static')
 
 @app.route('/')
 def home():
-    completion = openai.ChatCompletion.create(
-            model='gpt-3.5-turbo',
-            max_tokens=128,
-            messages=[
-                {
-                    "role": "system",
-                    "content": "You are a helpful AI assistant."
-                },
-                {
-                    "role":"user",
-                    "content": "How are you doing today?"
-                },
-            ],
-            temperature=0.9)
-    message_content = completion.choices[0].message.content
-    return render_template('index.html', dynamic_variable=message_content)
+    # completion = openai.ChatCompletion.create(
+    #         model='gpt-3.5-turbo',
+    #         max_tokens=128,
+    #         messages=[
+    #             {
+    #                 "role": "system",
+    #                 "content": "You are a helpful AI assistant."
+    #             },
+    #             {
+    #                 "role":"user",
+    #                 "content": "How are you doing today?"
+    #             },
+    #         ],
+    #         temperature=0.9)
+    # message_content = completion.choices[0].message.content
+    return render_template('index.html', dynamic_variable="Is this an OpenAI thing?")
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8080)
