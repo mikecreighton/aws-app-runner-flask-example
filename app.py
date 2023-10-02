@@ -1,31 +1,37 @@
 import os
 import pprint
 from dotenv import load_dotenv
-from flask import Flask, render_template
 import requests
 using_gunicorn = os.getenv('DEPLOYED_WITH_GUNICORN')
 using_gunicorn = using_gunicorn == 'True'
-
 if using_gunicorn:
     import grequests
+
+from wsgiref.simple_server import make_server
+from pyramid.config import Configurator
+from pyramid.response import Response
+from pyramid.view import view_config
 
 load_dotenv()
 
 # initialize openai with my key
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
-app = Flask(__name__, static_url_path='', static_folder='./static')
+@view_config(
+    route_name='home',
+    renderer='templates/home.jinja2'
+)
+def home(request):
+    return {'dynamic_variable': 'Sup homies'}
 
-@app.route('/')
-def home():
-    return render_template('index.html', dynamic_variable="Sup homies")
+def healthcheck(request):
+    return Response('OK')
 
-@app.route('/healthcheck')
-def healthcheck():
-    return 'OK'
-
-@app.route('/openai')
-def openai_test():
+@view_config(
+    route_name='openai_test',
+    renderer='templates/home.jinja2'
+)
+def openai_test(request):
     request_url = 'https://api.openai.com/v1/chat/completions'
     request_data = {
         'model': 'gpt-3.5-turbo',
@@ -53,7 +59,16 @@ def openai_test():
         response = requests.post(request_url, json=request_data, headers=request_headers)
     json_response = response.json()
     message_content = json_response['choices'][0]['message']['content']
-    return render_template('index.html', dynamic_variable=message_content)
+
+    return {'dynamic_variable': message_content}
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=8080)
+    with Configurator() as config:
+        config.include('pyramid_jinja2')
+        config.add_route('home', '/')
+        config.add_route('healthcheck', '/healthcheck')
+        config.add_route('openai_test', '/openai')
+        config.scan()
+        app = config.make_wsgi_app()
+    server = make_server('0.0.0.0', 8080, app)
+    server.serve_forever()
