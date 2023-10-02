@@ -51,8 +51,10 @@ def openai_test():
         response = grequests.map([req])[0]
     else:
         response = requests.post(request_url, json=request_data, headers=request_headers)
-    json_response = response.json()
-    message_content = json_response['choices'][0]['message']['content']
+    print(response)
+    # json_response = response.json()
+    # message_content = json_response['choices'][0]['message']['content']
+    message_content = "Just a test."
     return render_template('home.html', dynamic_variable=message_content)
 
 if __name__ == '__main__':
