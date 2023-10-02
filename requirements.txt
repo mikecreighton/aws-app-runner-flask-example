@@ -1,4 +1,5 @@
 python-dotenv
 Flask
-openai
+requests
+grequests
 gunicorn
