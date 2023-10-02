@@ -20,6 +20,10 @@ app = Flask(__name__, static_url_path='', static_folder='./static')
 def home():
     return render_template('index.html', dynamic_variable="Sup homies")
 
+@app.route('/healthcheck')
+def healthcheck():
+    return 'OK'
+
 @app.route('/openai')
 def openai_test():
     request_url = 'https://api.openai.com/v1/chat/completions'
