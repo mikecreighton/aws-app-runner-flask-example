@@ -67,6 +67,7 @@ if __name__ == '__main__':
         config.include('pyramid_jinja2')
         config.add_route('home', '/')
         config.add_route('healthcheck', '/healthcheck')
+        config.add_view(healthcheck, route_name='healthcheck')
         config.add_route('openai_test', '/openai')
         config.scan()
         app = config.make_wsgi_app()
