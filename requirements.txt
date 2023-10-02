@@ -1,6 +1,7 @@
 python-dotenv
-pyramid
-pyramid_jinja2
-gunicorn
-grequests
 requests
+Flask
+Flask-Cors
+gunicorn
+greenlet
+grequests
