@@ -1,14 +1,15 @@
 import os
 from dotenv import load_dotenv
 import requests
-using_gunicorn = os.getenv('DEPLOYED_WITH_GUNICORN')
-using_gunicorn = using_gunicorn == 'True'
-if using_gunicorn:
-    import grequests
 from flask import Flask, request, jsonify, make_response, render_template
 # from flask_cors import CORS
 
 load_dotenv()
+
+using_gunicorn = os.getenv('DEPLOYED_WITH_GUNICORN')
+using_gunicorn = using_gunicorn == 'True'
+if using_gunicorn:
+    import grequests
 
 # initialize openai with my key
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -51,10 +52,10 @@ def openai_test():
         response = grequests.map([req])[0]
     else:
         response = requests.post(request_url, json=request_data, headers=request_headers)
-    print(response)
-    # json_response = response.json()
-    # message_content = json_response['choices'][0]['message']['content']
-    message_content = "Just a test."
+    # print(response)
+    json_response = response.json()
+    message_content = json_response['choices'][0]['message']['content']
+    # message_content = "Just a test."
     return render_template('home.html', dynamic_variable=message_content)
 
 if __name__ == '__main__':
