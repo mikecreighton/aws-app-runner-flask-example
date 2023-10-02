@@ -1,12 +1,6 @@
 import os
-import pprint
 from dotenv import load_dotenv
 import requests
-using_gunicorn = os.getenv('DEPLOYED_WITH_GUNICORN')
-using_gunicorn = using_gunicorn == 'True'
-if using_gunicorn:
-    import grequests
-
 from wsgiref.simple_server import make_server
 from pyramid.config import Configurator
 from pyramid.response import Response
@@ -52,11 +46,7 @@ def openai_test(request):
         'Authorization': 'Bearer ' + OPENAI_API_KEY,
         'Content-Type': 'application/json'
     }
-    if using_gunicorn:
-        req = grequests.post(request_url, json=request_data, headers=request_headers)
-        response = grequests.map([req])[0]
-    else:
-        response = requests.post(request_url, json=request_data, headers=request_headers)
+    response = requests.post(request_url, json=request_data, headers=request_headers)
     json_response = response.json()
     message_content = json_response['choices'][0]['message']['content']
 

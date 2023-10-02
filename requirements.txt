@@ -2,5 +2,3 @@ python-dotenv
 pyramid
 pyramid_jinja2
 requests
-grequests
-gunicorn
